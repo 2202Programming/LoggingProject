@@ -3,7 +3,7 @@ package frc.robot.commands.Intake.Washer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.Intake_Constants;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Intake.Intake;
 
 public class IntakeForward extends CommandBase {
 

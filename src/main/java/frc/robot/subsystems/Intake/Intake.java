@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.Intake;
 
 import com.revrobotics.CANSparkMax;
 
@@ -18,6 +18,8 @@ import frc.robot.Constants.CAN;
 import frc.robot.Constants.DigitalIO;
 import frc.robot.Constants.PCM1;
 import frc.robot.Constants.Intake_Constants;
+
+import org.littletonrobotics.junction.Logger;
 
 /*
  * On the intake: upper and lower motor and pneumatics (double solenoid)
@@ -52,8 +54,14 @@ final DoubleSolenoid lt_intake_solenoid = new DoubleSolenoid(CAN.PCM1,
   final CANSparkMax l_carwash_mtr = new CANSparkMax(CAN.CARWASH_LEFT_MTR, CANSparkMax.MotorType.kBrushless);
   final CANSparkMax r_carwash_mtr = new CANSparkMax(CAN.CARWASH_RIGHT_MTR, CANSparkMax.MotorType.kBrushless);
   
+  private final IntakeIO io;
+  private final IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
+  private Logger logger = Logger.getInstance();
+
   /** Creates a new Intake. */
-  public Intake() {
+  public Intake(IntakeIO io) {
+    this.io = io;
+  
     motor_config(l_intake_mtr, false);
     motor_config(r_intake_mtr, false);
     motor_config(l_carwash_mtr, true);
@@ -70,7 +78,12 @@ final DoubleSolenoid lt_intake_solenoid = new DoubleSolenoid(CAN.PCM1,
 
   @Override
   public void periodic() {
-    ntupdates();
+    io.updateInputs(inputs);
+    logger.processInputs("Intake", inputs);
+
+    // Log intake speed 
+    logger.recordOutput("IntakeSpeed", getIntakeSpeed());
+  ntupdates();
   }
 
   //Turn Intake Motor On by sending a double value
@@ -86,26 +99,6 @@ final DoubleSolenoid lt_intake_solenoid = new DoubleSolenoid(CAN.PCM1,
   public void intakeOff() {
     setIntakeSpeed(0.0);
   }
-
-  /*
-    Mr.L - removing these to force using setIntakeSpeed(spd)  
-    Commands can change the speed and deal with directions.
-
-  public void intakeOn(){    //on() with no-args is default
-    setIntakeSpeed(Intake_Constants.IntakeMotorStrength);
-  }
-  
-  public void intakeOnReverse() {
-    setIntakeSpeed(-Intake_Constants.IntakeMotorStrength);
-  }
-
- 
-
-  public void intakeReverse() {
-    setIntakeSpeed(-currentIntakeSpeed);
-    currentIntakeSpeed = -currentIntakeSpeed;
-  }
-*/
 
   //Deploy arm mechanism using a Double Solenoids
   public void deploy() {
@@ -165,8 +158,8 @@ final DoubleSolenoid lt_intake_solenoid = new DoubleSolenoid(CAN.PCM1,
   }
 
   public void ntupdates() {
-    // if (nt_intakeSpeed.getDouble(0.0) != IntakeMotorStrength) setIntakeSpeed(nt_intakeSpeed.getDouble(0.0));
-    // if (nt_carwashSpeed.getDouble(0.0) != CarwashMotorStrength) setIntakeSpeed(nt_carwashSpeed.getDouble(0.0));
+    //if (nt_intakeSpeed.getDouble(0.0) != Intake_Constants.IntakeMotorStrength) setIntakeSpeed(nt_intakeSpeed.getDouble(0.0));
+    //if (nt_carwashSpeed.getDouble(0.0) != Intake_Constants.CarwashMotorStrength) setIntakeSpeed(nt_carwashSpeed.getDouble(0.0));
   }
 
 }

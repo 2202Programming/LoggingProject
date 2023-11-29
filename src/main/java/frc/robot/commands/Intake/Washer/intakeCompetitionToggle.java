@@ -10,7 +10,7 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.Intake_Constants;
 import frc.robot.commands.JoystickRumbleEndless;
 import frc.robot.subsystems.BlinkyLights.BlinkyLightUser;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Intake.Intake;
 
 public class intakeCompetitionToggle extends CommandBase implements BlinkyLightUser {
   /** Creates a new intakeCompetitionToggle. */
